@@ -1,0 +1,85 @@
+package com.van.log.domain.models;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+
+@Entity
+public class Veiculo {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
+
+	@NotBlank
+	private String modelo;
+
+	@NotBlank
+	@Past
+	private Date ano;
+
+	@NotBlank
+	private String marca;
+	
+	@NotNull
+	private BigDecimal valor;
+
+	private Veiculo() {
+		
+	}
+
+	public Veiculo(@NotBlank String modelo, @NotBlank @Past Date ano, @NotBlank String marca) {
+		this();
+		this.modelo = modelo;
+		this.ano = ano;
+		this.marca = marca;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public String getMarca() {
+		return marca;
+	}
+
+	public String getModelo() {
+		return modelo;
+	}
+
+	public Date getAno() {
+		return ano;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Veiculo other = (Veiculo) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
+}
