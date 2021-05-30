@@ -1,7 +1,6 @@
 package com.van.log.domain.models;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,7 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
 
 @Entity
 public class Veiculo {
@@ -21,9 +19,8 @@ public class Veiculo {
 	@NotBlank
 	private String modelo;
 
-	@NotBlank
-	@Past
-	private Date ano;
+	@NotNull
+	private String ano;
 
 	@NotBlank
 	private String marca;
@@ -35,7 +32,7 @@ public class Veiculo {
 		
 	}
 
-	public Veiculo(@NotBlank String modelo, @NotBlank @Past Date ano, @NotBlank String marca) {
+	public Veiculo(@NotBlank String modelo,@NotNull String ano, @NotBlank String marca) {
 		this();
 		this.modelo = modelo;
 		this.ano = ano;
@@ -54,8 +51,16 @@ public class Veiculo {
 		return modelo;
 	}
 
-	public Date getAno() {
+	public String getAno() {
 		return ano;
+	}
+
+	public BigDecimal getValor() {
+		return valor;
+	}
+
+	public void setValor(BigDecimal valor) {
+		this.valor = valor;
 	}
 
 	@Override
