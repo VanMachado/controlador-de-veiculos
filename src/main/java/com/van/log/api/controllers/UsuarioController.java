@@ -23,6 +23,7 @@ import com.van.log.domain.models.Usuario;
 import com.van.log.domain.models.Veiculo;
 import com.van.log.domain.repositories.UsuarioRepository;
 import com.van.log.domain.repositories.VeiculoRepository;
+import com.van.log.domain.services.UsuarioService;
 import com.van.log.domain.services.VeiculoService;
 
 @RestController
@@ -31,6 +32,9 @@ public class UsuarioController {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 
+	@Autowired
+	private UsuarioService usuarioService;
+	
 	@Autowired
 	private VeiculoRepository veiculoRepository;
 
@@ -43,7 +47,7 @@ public class UsuarioController {
 
 		Usuario usuario = usuarioRequestDto.toModel();
 
-		Usuario salvo = usuarioRepository.save(usuario);
+		Usuario salvo = usuarioService.salvar(usuario);
 
 		return ResponseEntity.created(uriComponentsBuilder.path("/usuarios/{id}").buildAndExpand(salvo.getId()).toUri())
 				.body(salvo);
