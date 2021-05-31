@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.van.log.microservices.fipe.dtos.responses.AnoDtoResponse;
 import com.van.log.microservices.fipe.dtos.responses.DadosVeiculoDto;
 import com.van.log.microservices.fipe.dtos.responses.MarcaDtoReponse;
 import com.van.log.microservices.fipe.dtos.responses.ModeloDtoResponse;
@@ -27,6 +26,7 @@ public class FipeMicroservice {
 			}
 
 		}
+
 		return null;
 	}
 
@@ -38,48 +38,56 @@ public class FipeMicroservice {
 
 	}
 
-	public String obterCodigoDoModelo(String nomeModelo, String nomeMarca) {
+	public String obterCodigoDoModelo(String nomeModelo, String codigoMarca) {
 
-		ModeloDtoResponse modelo = fipeEndpoint.getDadosAnoModelo(nomeMarca);
+		ModeloDtoResponse modelo = fipeEndpoint.getDadosAnoModelo(codigoMarca);
 
-		return geCodigoDoModelo(modelo, nomeModelo);
+		return getCodigoDoModelo(modelo, nomeModelo);
 
 	}
 
-	private String geCodigoDoModelo(ModeloDtoResponse modelo, String nomeModelo) {
+	private String getCodigoDoModelo(ModeloDtoResponse modelo, String nomeModelo) {
 
-		for (ModeloInternoDtoResponse modeloInternoDtoReponse : modelo.getModelosInternos()) {
+		for (ModeloInternoDtoResponse modeloInternoDtoReponse : modelo.getModelos()) {
+
 			if (modeloInternoDtoReponse.getNome().equals(nomeModelo)) {
 				return modeloInternoDtoReponse.getCodigo();
 			}
+
 		}
+
 		return null;
-	}
 
-	public String obterCodigoDoAno(String nomeAno, String nomeModelo) {
-
-		ModeloDtoResponse modelo = fipeEndpoint.getDadosAnoModelo(nomeModelo);
-
-		return getCodigoDoAno(modelo, nomeAno);
-
-	}
-
-	private String getCodigoDoAno(ModeloDtoResponse modelo, String nomeAno) {
-
-		for (AnoDtoResponse anoDtoReponse : modelo.getAnos()) {
-			if (anoDtoReponse.getNome().equals(nomeAno)) {
-				return anoDtoReponse.getCodigo();
-			}
-		}
-		return null;
 	}
 
 	public BigDecimal getValorDoVeiculo(String codigoMarca, String codigoModelo, String codigoAno) {
 
 		DadosVeiculoDto dadosDoVeiculo = fipeEndpoint.getDadosDoVeiculo(codigoMarca, codigoModelo, codigoAno);
 
-		return dadosDoVeiculo.getBigDecimalValor();
+		String valorString = dadosDoVeiculo.getValor();
 
+		System.out.println("1 - valor: " + dadosDoVeiculo.getValor());
+		System.out.println("2 - valor: " + dadosDoVeiculo.getMarca());
+		System.out.println("4 - valor: " + dadosDoVeiculo.getModelo());
+		System.out.println("3 - valor: " + dadosDoVeiculo.getAnoModelo());
+		System.out.println("5 - valor: " + dadosDoVeiculo.getCombustivel());
+		System.out.println("6 - valor: " + dadosDoVeiculo.getCodigoFipe());
+
+		BigDecimal valorVeiculo = getBigDecimalValor(valorString);
+
+		return valorVeiculo;
+
+	}
+
+	private BigDecimal getBigDecimalValor(String valorString) {
+		String removeSigla = valorString.substring(3);
+
+		String limpaNumero = removeSigla.replace(".", "");
+		String padronizaNumero = limpaNumero.replace(",", ".");
+
+		BigDecimal valorFinal = new BigDecimal(padronizaNumero);
+
+		return valorFinal;
 	}
 
 }

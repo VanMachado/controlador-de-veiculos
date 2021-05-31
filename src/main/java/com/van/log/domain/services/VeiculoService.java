@@ -24,15 +24,14 @@ public class VeiculoService {
 		String codigoMarca = fipeMicroservice.obterCodigoDaMarca(nomeMarca);
 
 		String nomeModelo = veiculo.getModelo();
-		String codigoModelo = fipeMicroservice.obterCodigoDoModelo(nomeModelo, nomeMarca);
+		String codigoModelo = fipeMicroservice.obterCodigoDoModelo(nomeModelo, codigoMarca);
 
-		String nomeAno = veiculo.getAno();
-		String codigoAno = fipeMicroservice.obterCodigoDoAno(nomeAno, nomeModelo);
+		String codigoAno = veiculo.getAno();
 
 		BigDecimal valorVeiculo = fipeMicroservice.getValorDoVeiculo(codigoMarca, codigoModelo, codigoAno);
-		
+
 		veiculo.setValor(valorVeiculo);
-		
+
 		Veiculo save = veiculoRepository.save(veiculo);
 		return save;
 

@@ -1,17 +1,24 @@
 package com.van.log.domain.models;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
-import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.br.CPF;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Usuario {
@@ -19,80 +26,65 @@ public class Usuario {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer Id;
-	
+
 	@NotBlank
-	@Column
 	private String nome;
 
 	@NotBlank
-	@Size(max = 255)
-	@Column
+	@Email
 	private String email;
 
 	@NotBlank
-	@Column
+	@CPF
 	private String cpf;
 
 	@NotNull
 	@Past
-	@Column
+	@Column(name = "data_nascimento")
 	private Date dataDeNascimento;
-	
-	
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+	private Set<Veiculo> veiculos;
 
 	private Usuario() {
-		
+
+		this.veiculos = new HashSet<>();
+
 	}
-	
-	public Usuario(@NotBlank String nome, @NotBlank @Size(max = 255) String email, @NotBlank String cpf,
+
+	public Usuario(@NotBlank String nome, @NotBlank @Email String email, @NotBlank @CPF String cpf,
 			@NotNull @Past Date dataDeNascimento) {
 		this();
 		this.nome = nome;
 		this.email = email;
 		this.cpf = cpf;
 		this.dataDeNascimento = dataDeNascimento;
-		
+
 	}
 
-	
 	public Integer getId() {
 		return Id;
-	}
-
-	public void setId(Integer id) {
-		Id = id;
 	}
 
 	public String getNome() {
 		return nome;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
 	public String getEmail() {
 		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
 	}
 
 	public String getCpf() {
 		return cpf;
 	}
 
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
-
 	public Date getDataDeNascimento() {
 		return dataDeNascimento;
 	}
 
-	public void setDataDeNascimento(Date dataDeNascimento) {
-		this.dataDeNascimento = dataDeNascimento;
+	public Set<Veiculo> getVeiculos() {
+		return veiculos;
 	}
 
 	@Override
@@ -131,7 +123,5 @@ public class Usuario {
 			return false;
 		return true;
 	}
-	
-	
 
 }

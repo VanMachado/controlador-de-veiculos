@@ -4,15 +4,15 @@ import java.util.List;
 
 public class ModeloDtoResponse {
 
-	private List<ModeloInternoDtoResponse> modelosInternos;
+	private List<ModeloInternoDtoResponse> modelos;
 	private List<AnoDtoResponse> anos;
 
-	public List<ModeloInternoDtoResponse> getModelosInternos() {
-		return modelosInternos;
+	public List<ModeloInternoDtoResponse> getModelos() {
+		return modelos;
 	}
 
-	public void setModelosInternos(List<ModeloInternoDtoResponse> modelosInternos) {
-		this.modelosInternos = modelosInternos;
+	public void setModelos(List<ModeloInternoDtoResponse> modelos) {
+		this.modelos = modelos;
 	}
 
 	public List<AnoDtoResponse> getAnos() {
@@ -28,7 +28,7 @@ public class ModeloDtoResponse {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((anos == null) ? 0 : anos.hashCode());
-		result = prime * result + ((modelosInternos == null) ? 0 : modelosInternos.hashCode());
+		result = prime * result + ((modelos == null) ? 0 : modelos.hashCode());
 		return result;
 	}
 
@@ -46,10 +46,10 @@ public class ModeloDtoResponse {
 				return false;
 		} else if (!anos.equals(other.anos))
 			return false;
-		if (modelosInternos == null) {
-			if (other.modelosInternos != null)
+		if (modelos == null) {
+			if (other.modelos != null)
 				return false;
-		} else if (!modelosInternos.equals(other.modelosInternos))
+		} else if (!modelos.equals(other.modelos))
 			return false;
 		return true;
 	}
