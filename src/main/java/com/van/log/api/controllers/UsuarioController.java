@@ -1,5 +1,6 @@
 package com.van.log.api.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +18,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.van.log.api.dtos.requests.UsuarioRequestDto;
 import com.van.log.api.dtos.requests.VeiculoRequestDto;
+import com.van.log.api.dtos.responses.VeiculoResponseDto;
 import com.van.log.domain.models.Usuario;
 import com.van.log.domain.models.Veiculo;
 import com.van.log.domain.repositories.UsuarioRepository;
@@ -48,8 +50,7 @@ public class UsuarioController {
 	}
 
 	@GetMapping("/usuarios/{idUsuario}/veiculos")
-	public ResponseEntity<List<Veiculo>> listar(@PathVariable Integer idUsuario,
-			UriComponentsBuilder uriComponentsBuilder) {
+	public ResponseEntity<List<VeiculoResponseDto>> listar(@PathVariable Integer idUsuario) {
 
 		Optional<Usuario> findById = usuarioRepository.findById(idUsuario);
 
@@ -60,15 +61,21 @@ public class UsuarioController {
 		Usuario usuario = findById.get();
 
 		List<Veiculo> veiculos = veiculoRepository.findByUsuario(usuario);
-
-		return ResponseEntity
-				.created(uriComponentsBuilder.path("/usuarios/{id}/veiculos").buildAndExpand(usuario.getId()).toUri())
-				.body(veiculos);
+		
+		List<VeiculoResponseDto> veiculosDto = new ArrayList<>();
+		
+		veiculos.forEach(veiculo -> {
+			
+			veiculosDto.add(new VeiculoResponseDto(veiculo));
+			
+		});
+		
+		return ResponseEntity.status(HttpStatus.OK).body(veiculosDto);
 
 	}
 
 	@PostMapping("/usuarios/{idUsuario}/veiculos")
-	public ResponseEntity<Veiculo> cadastrarVeiculo(@PathVariable Integer idUsuario,
+	public ResponseEntity<VeiculoResponseDto> cadastrarVeiculo(@PathVariable Integer idUsuario,
 			@Valid @RequestBody VeiculoRequestDto veiculoRequestDto, UriComponentsBuilder uriComponentsBuilder) {
 
 		Optional<Usuario> findById = usuarioRepository.findById(idUsuario);
@@ -82,11 +89,13 @@ public class UsuarioController {
 		Veiculo veiculo = veiculoRequestDto.toModel();
 
 		veiculo.setUsuario(usuario);
-		
+
 		Veiculo cadastrado = veiculoService.cadastrar(veiculo);
 
+		VeiculoResponseDto veiculoResponseDto = new VeiculoResponseDto(cadastrado);
+
 		return ResponseEntity.created(uriComponentsBuilder.path("/usuarios/{idUsuario}/veiculos/{idVeiculo}")
-				.buildAndExpand(usuario.getId(), cadastrado.getId()).toUri()).body(cadastrado);
+				.buildAndExpand(usuario.getId(), cadastrado.getId()).toUri()).body(veiculoResponseDto);
 
 	}
 }
